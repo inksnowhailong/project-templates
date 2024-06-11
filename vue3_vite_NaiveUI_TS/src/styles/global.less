@@ -1,0 +1,30 @@
+// 用于设置背景图片
+.set-bg(@url) {
+  background-position: 100% 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: @url;
+}
+
+// 旋转动画开始↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓开始>
+@keyframes rotateAnimation {
+  from {
+    transform: rotate(0deg);
+  }
+  from {
+    transform: rotate(360deg);
+  }
+}
+.rotate-animation(@duration:8s) {
+  animation: rotateAnimation @duration linear infinite;
+}
+// 旋转动画结束↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑结束>
+
+// 一种tag样式开始↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓开始>
+.set-border-bg-color(@red,@green,@blue,@bgOpacity:0.2) {
+  color: rgb(@red, @green, @blue);
+  background: rgba(@red, @green, @blue, @bgOpacity);
+  border: 1px solid rgba(@red, @green, @blue);
+  border-radius: 2px;
+}
+// 一种tag样式结束↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑结束>

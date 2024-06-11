@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "johnsoncodehk.volar",
+    "obkoro1.korofileheader",
+    "naumovs.color-highlight",
+    "steoates.autoimport",
+    "moppitz.vscode-extension-auto-import",
+    "dbaeumer.vscode-eslint",
+    "rvest.vs-code-prettier-eslint",
+    "christian-kohler.path-intellisense",
+    "inksnow.packagerun",
+    "ms-vscode.vscode-typescript-next",
+    "xabikos.JavaScriptSnippets",
+    "inksnow.apidoc2ts"
+  ]
+}
