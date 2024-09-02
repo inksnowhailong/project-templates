@@ -1,13 +1,12 @@
-import { FormInst } from 'naive-ui'
 import { IForm } from '../abstract/IForm'
-
-export class formNaiveUI<T> extends IForm {
+import { FormInstance } from 'element-plus'
+export class formElementUI<T> extends IForm {
   protected initFields: T
   private submitMethod?: IForm['submit']
 
   constructor(
     fields: Ref<T>,
-    public validRef: FormInst,
+    public validRef:Ref<FormInstance>,
     submitMethod?: IForm['submit']
   ) {
     super(fields)
@@ -15,8 +14,8 @@ export class formNaiveUI<T> extends IForm {
     this.submitMethod = submitMethod
   }
 
-  async valid(): Promise<ReturnType<FormInst['validate']>> {
-    return await this.validRef.validate()
+  async valid(): Promise<ReturnType<FormInstance['validate']>> {
+   return await this.validRef.value.validate()
   }
 
     // submit 方法已经在构造函数中定义
@@ -29,7 +28,7 @@ export class formNaiveUI<T> extends IForm {
   }
   reset(): void {
     // 还原到未校验的状态
-    this.validRef.restoreValidation()
+    this.validRef.value.resetFields()
     this.fields.value = structuredClone(this.initFields)
   }
 }
