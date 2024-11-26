@@ -20,4 +20,5 @@ export abstract class IForm implements IFormType {
   public abstract submit(...args: any[]): Promise<any> | void
 
   public abstract reset(...args: any[]): Promise<any> | void
+
 }

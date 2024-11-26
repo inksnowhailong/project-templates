@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.activityCard :deep(.uni-table) {
+  @apply bg-uni-color-Secondary;
+}
+
+.activityCard :deep(.uni-table-tr):nth-child(n + 1) .uni-table-td {
+  @apply text-uni-color-success text-xs;
+}
+.activityCard :deep(.uni-table-tr):last-child .uni-table-td {
+  @apply text-uni-color-error;
+}

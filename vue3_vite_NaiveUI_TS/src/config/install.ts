@@ -2,7 +2,6 @@ import { App } from 'vue'
 import { Router } from 'vue-router'
 import { IframeBus } from './iframeBus'
 import { config } from './config'
-import axios from 'axios'
 // 创建一个 iframe 实例
 export const iframeBus = new IframeBus(config.iframeBus, config.iframeBus.iframeTaskObj, config.iframeBus.iframeMethods)
 
