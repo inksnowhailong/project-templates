@@ -1,6 +1,5 @@
 import { DirectiveHook, App, render, Directive } from 'vue'
 import baseEmptyVue from './empty/baseEmpty.vue'
-import baseSkeletonVue from './skeleton/baseSkeleton.vue'
 import { Router } from 'vue-router'
 
 /**
@@ -10,7 +9,6 @@ import { Router } from 'vue-router'
  */
 export default function (app: App<Element>, router: Router) {
   app.directive('empty', VEmpty)
-  app.directive('skeleton', VSkeleton)
   ErrorPage(router)
 }
 
@@ -46,30 +44,6 @@ const VEmpty: DirectiveHook = (el: HTMLElement, binding, vnode) => {
     }),
     el
   )
-}
-
-/**
- * @description: 骨架屏指令
- * @param {*} el
- * @param {*} binding
- * @param {*} vnode
- * @return {*}
- */
-const VSkeleton: DirectiveHook = (el: HTMLElement, binding, vnode) => {
-  const SkeletonProps = { style: { display: false }, repeat: 0, ...binding.value }
-  if ((typeof binding.value === 'boolean' && binding.value) || (typeof binding.value === 'object' && binding.value.show)) {
-    // 默认根据高度计算重复次数
-    const he = el.getBoundingClientRect().height
-    const repeat = Math.floor(he / 24)
-    SkeletonProps.repeat = repeat
-    SkeletonProps.style.display = true
-  } else {
-    SkeletonProps.style.display = false
-  }
-
-  const skeletonVnode = h(baseSkeletonVue, SkeletonProps)
-  // 第一次是创建，之后都是重新渲染
-  render(skeletonVnode, el)
 }
 
 /**

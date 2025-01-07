@@ -117,6 +117,9 @@ export default [{
         "vue/require-default-prop": "off",
         "vue/comment-directive": "off",
         "@typescript-eslint/no-namespace": "off",
+        "@typescript-eslint/no-unused-expressions": "off",
+        "@typescript-eslint/no-empty-object-type": "off",
+        "@typescript-eslint/triple-slash-reference": "off",
     },
 }, {
     files: ["**/__tests__/*.{j,t}s?(x)", "**/tests/unit/**/*.spec.{j,t}s?(x)"],

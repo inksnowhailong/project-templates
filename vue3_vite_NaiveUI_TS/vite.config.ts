@@ -7,10 +7,11 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import AutoImport from 'unplugin-auto-import/vite' //按需自动加载依赖包
 import VueDevTools from 'vite-plugin-vue-devtools' //开发调试器
 import { compression } from 'vite-plugin-compression2'
-
+import UnoCSS from 'unocss/vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    UnoCSS(), // 必须在使用的vue/react等框架之前，因为使用了presetAttributify
     vue(),
     eslintPlugin({
       cache: true,
@@ -56,7 +57,6 @@ export default defineConfig({
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
-        additionalData: `@import "${__dirname}/src/styles/global.less";` //加载全局样式
       }
     }
   },

@@ -103,21 +103,11 @@ const srcdata = [
 </script>
 <template>
   <n-scrollbar style="height: 100vh">
-    <n-flex class="home" vertical align="center">
-      <n-gradient-text
-        :gradient="{
-          deg: 0,
-          from: 'rgb(255, 123, 32)',
-          to: 'rgb(252, 222, 99)'
-        }"
-        :size="60"
-        type="success"
-      >
-        2024 前端基础工程框架
-      </n-gradient-text>
-      <n-h1>文件目录</n-h1>
-      <n-tree class="ntree" block-line :data="srcdata" default-expand-all />
-      <n-h1>内置的config</n-h1>
+    <n-flex  w-full h-full px-24 py-8 class="home" vertical align="center">
+      <HomeTop></HomeTop>
+      <n-h1 text="primary">文件目录</n-h1>
+      <n-tree class="ntree w-[1000px]" block-line :data="srcdata" default-expand-all />
+      <n-h1 text-primary>内置的config</n-h1>
       <n-ul align-text>
         <n-li>
           <n-space :size="[32, 0]">
@@ -154,16 +144,5 @@ const srcdata = [
   </n-scrollbar>
 </template>
 <style lang="less" scoped>
-.home {
-  width: 100%;
-  height: 100%;
-  // background-color: #ffffff;
-  padding: 96px 32px;
-  .ntree {
-    width: 1000px;
-  }
-  .n-h1 {
-    color: rgb(255, 123, 32);
-  }
-}
+
 </style>

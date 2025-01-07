@@ -6,6 +6,8 @@ import '@/router/permission'
 import '@/styles/index.less'
 import AlertAndErrorLayerInstall from './AlertAndErrorLayer/AlertAndErrorLayerInstall'
 import config from '@/config/install'
+import 'virtual:uno.css'
+
 const app = createApp(App)
 app.provide('theme', 'dark')
 app.config.warnHandler = () => null
