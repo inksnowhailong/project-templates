@@ -103,10 +103,10 @@ const srcdata = [
 </script>
 <template>
   <n-scrollbar style="height: 100vh">
-    <n-flex  w-full h-full px-24 py-8 class="home" vertical align="center">
+    <n-flex class="home" w-full h-full px-24 py-8 vertical align="center">
       <HomeTop></HomeTop>
       <n-h1 text="primary">文件目录</n-h1>
-      <n-tree class="ntree w-[1000px]" block-line :data="srcdata" default-expand-all />
+      <n-tree class="ntree w-[1000px]" :data="srcdata" default-expand-all block-line />
       <n-h1 text-primary>内置的config</n-h1>
       <n-ul align-text>
         <n-li>
@@ -143,6 +143,4 @@ const srcdata = [
     </n-flex>
   </n-scrollbar>
 </template>
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>
