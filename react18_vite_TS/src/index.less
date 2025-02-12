@@ -1,0 +1,73 @@
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+  &::-webkit-scrollbar {
+    // 滚动条样式
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: rgba(29, 133, 255, 0.1);
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background: rgba(29, 133, 255, 0.05);
+  }
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+picture,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+a {
+  text-decoration: none;
+}
+ul,
+ol {
+  list-style: none;
+}
+
+// 浏览器有时会给输入框默认赋值， 去除这种情况下的默认输入框样式
+input:-internal-autofill-previewed,
+input:-internal-autofill-selected {
+  // -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+#root {
+  height: 100%;
+  overflow: hidden;
+}
