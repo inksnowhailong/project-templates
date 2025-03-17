@@ -1,6 +1,5 @@
 import { mainStore } from '@/store/modules/mainStore'
 import { Router } from 'vue-router'
-
 /**
  * @description: 路由拦截器
  * @return {*}
@@ -14,6 +13,7 @@ export default function permission(router: Router) {
    * @return {*}
    */
   router.beforeEach((to, from, next) => {
+
     if (!router.hasRoute(to.name as string)) {
       next('/404')
     } else {

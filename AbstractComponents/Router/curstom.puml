@@ -1,0 +1,160 @@
+@startuml 高级路由抽象设计
+
+' 领域模型
+package "Domain Models" {
+
+    interface "NavigationOptions" {
+        params?: Map<string, string> :路由参数,比如 /user/:id
+        query?: Map<string, string>  :查询参数,比如 ?id=1
+        hash?: string :比如锚点
+    }
+    enum "NavigationType" {
+        push
+        replace
+        back
+        forward
+    }
+
+    class "NavigationContext" {
+        +instruction: NavigationInstruction :导航指令
+        +prevRoute: ResolvedRoute
+        +nextRoute: ResolvedRoute
+        +currentRoute: ResolvedRoute
+        +metadata: Map<string, any>
+    }
+
+    class "NavigationInstruction" {
+        +type: NavigationType
+        +target: string
+        +options: NavigationOptions
+        +timestamp: number
+    }
+
+    class "ResolvedRoute" {
+        +path: string
+        +name?: string
+        +component: any
+        +guards: RouteGuard[] :路由守卫,用于拦截导航
+        +enterHook: RouterBefore[] :完成一些预处理任务
+        +leaveHook: RouterLeave[] :完成一些后处理任务
+        +children: ResolvedRoute[] :子路由
+        +metadata: Map<string, any>
+    }
+}
+
+' 核心逻辑抽象
+package "Core Abstractions" {
+
+    ' 导航器，使用有两种方式进行编程式路由导航
+    interface "INavigator" {
+        +to(type: NavigationType, target: string, options: NavigationOptions): Promise<void> :通过字符串类型进行路由导航的方式
+        +push(target: string, options: NavigationOptions): Promise<void>
+        +replace(target: string, options: NavigationOptions): Promise<void>
+        +back(): Promise<void>
+        +forward(): Promise<void>
+    }
+    ' 路由解析器，用于解析路由路径
+    interface "IRouteResolver" {
+        +resolve(path: string): Promise<ResolvedRoute>
+    }
+
+    interface "IMiddleware" {
+        ' 执行此中间件逻辑
+        +process(context: NavigationContext, next: () => Promise<void>): Promise<void>
+    }
+
+    interface "IHistoryManager" {
+        +push(entry: NavigationInstruction): void
+        +replace(entry: NavigationInstruction): void
+        +back(): void
+        +forward(): void
+        +getAllHistory(): NavigationInstruction[]
+        +clear(): void
+    }
+
+    interface "IRoute" {
+        routes: ResolvedRoute[]
+        routeMap: Map<string, ResolvedRoute>
+        +createRouteMap(): void: 根据routes创建路由映射表
+        +addRoute(route: ResolvedRoute): void
+    }
+}
+
+
+
+package "Pipeline" {
+    class "NavigationPipeline" {
+        -middlewares: IMiddleware[]
+        -errorHandler?: (error: Error, context: NavigationContext) => void
+        +pipe(context: NavigationContext): Promise<void>
+        +addMiddleware(middleware: IMiddleware): void
+        +onError(handler: (error: Error, context: NavigationContext) => void): void
+    }
+    ' 路由守卫中间件
+    class "GuardMiddleware" {
+        +process(context: NavigationContext, next: () => Promise<void>): Promise<void>
+    }
+    '
+    class "ResolverMiddleware" {
+        +process(context: NavigationContext, next: () => Promise<void>): Promise<void>
+    }
+    class "HistoryMiddleware" {
+        +process(context: NavigationContext, next: () => Promise<void>): Promise<void>
+    }
+}
+
+
+package "Framework Adapters" {
+    abstract class "AbstractRouterAdapter" {
+        +navigator: INavigator
+        #resolver: IRouteResolver
+        +history: IHistoryManager
+        +route:IRoute
+        #pipeline: NavigationPipeline
+        +initialize(route:IRoute,pipeline:NavigationPipeline): void
+        +{abstract} createNavigator(): INavigator
+        +{abstract} createResolver(): IRouteResolver
+        +{abstract} createHistory(): IHistoryManager
+        +{abstract} errorHandler():void
+    }
+}
+
+' 关系定义
+
+
+NavigationPipeline o-- IMiddleware
+AbstractRouterAdapter o-- INavigator
+AbstractRouterAdapter o-- IRouteResolver
+AbstractRouterAdapter o-- NavigationPipeline
+AbstractRouterAdapter o-- IHistoryManager
+
+GuardMiddleware ..|> IMiddleware
+ResolverMiddleware ..|> IMiddleware
+HistoryMiddleware ..|> IMiddleware
+
+NavigationContext --> NavigationInstruction
+NavigationContext --> ResolvedRoute
+NavigationInstruction --> NavigationType
+NavigationPipeline --> NavigationContext
+
+INavigator --> NavigationType
+INavigator --> NavigationOptions
+IHistoryManager --> NavigationInstruction
+
+note right of NavigationPipeline
+    导航管道
+    处理所有导航相关的中间件
+end note
+
+note right of IMiddleware
+    中间件接口
+    定义了导航过程中的处理单元
+end note
+
+note right of AbstractRouterAdapter
+    路由适配器抽象基类
+    可以采用适配器模式来实现不同框架的路由适配
+    也可以采用工厂模式来创建不同框架的路由适配器
+end note
+
+@enduml

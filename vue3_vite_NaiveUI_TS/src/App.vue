@@ -17,6 +17,8 @@ import MessageContent from '@/AlertAndErrorLayer/MessageContent/MessageContent.v
 import DialogContent from '@/AlertAndErrorLayer/dialog/DialogContent.vue'
 import { NDialogProvider, NLoadingBarProvider, NMessageProvider } from 'naive-ui'
 import { mainStore } from './store/modules/mainStore'
+import { defineOptions } from 'vue'
+
 const URLThemeName = new URLSearchParams(window.location.search).get('theme')
 if (URLThemeName && ['light', 'dark'].includes(URLThemeName)) {
   mainStore.theme = URLThemeName as 'light' | 'dark'
@@ -25,6 +27,8 @@ provide(
   'themeName',
   computed(() => mainStore.theme)
 )
+
+defineOptions()
 </script>
 
 <style lang="less">
