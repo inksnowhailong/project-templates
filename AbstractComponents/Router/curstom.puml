@@ -15,12 +15,23 @@ package "Domain Models" {
         forward
     }
 
+    interface RouteGuard {
+        (context: NavigationContext): NavigationInstruction| void | Promise<NavigationInstruction|void>;
+    }
+
+    interface RouterBefore {
+        (context: NavigationContext): void | Promise<void>;
+    }
+    interface RouterLeave {
+        (context: NavigationContext): void | Promise<void>;
+    }
+
+
     class "NavigationContext" {
         +instruction: NavigationInstruction :导航指令
-        +prevRoute: ResolvedRoute
-        +nextRoute: ResolvedRoute
+        +prevInstruction: NavigationInstruction
+        +nextInstruction: NavigationInstruction
         +currentRoute: ResolvedRoute
-        +metadata: Map<string, any>
     }
 
     class "NavigationInstruction" {
@@ -95,9 +106,6 @@ package "Pipeline" {
         +process(context: NavigationContext, next: () => Promise<void>): Promise<void>
     }
     '
-    class "ResolverMiddleware" {
-        +process(context: NavigationContext, next: () => Promise<void>): Promise<void>
-    }
     class "HistoryMiddleware" {
         +process(context: NavigationContext, next: () => Promise<void>): Promise<void>
     }
@@ -129,11 +137,13 @@ AbstractRouterAdapter o-- NavigationPipeline
 AbstractRouterAdapter o-- IHistoryManager
 
 GuardMiddleware ..|> IMiddleware
-ResolverMiddleware ..|> IMiddleware
 HistoryMiddleware ..|> IMiddleware
 
 NavigationContext --> NavigationInstruction
 NavigationContext --> ResolvedRoute
+ResolvedRoute --> RouteGuard
+ResolvedRoute --> RouterBefore
+ResolvedRoute --> RouterLeave
 NavigationInstruction --> NavigationType
 NavigationPipeline --> NavigationContext
 
