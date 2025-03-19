@@ -139,17 +139,20 @@ AbstractRouterAdapter o-- IHistoryManager
 GuardMiddleware ..|> IMiddleware
 HistoryMiddleware ..|> IMiddleware
 
-NavigationContext --> NavigationInstruction
-NavigationContext --> ResolvedRoute
-ResolvedRoute --> RouteGuard
-ResolvedRoute --> RouterBefore
-ResolvedRoute --> RouterLeave
+NavigationContext --* NavigationInstruction
+NavigationContext --* ResolvedRoute
+ResolvedRoute o-- RouteGuard
+ResolvedRoute o-- RouterBefore
+ResolvedRoute o-- RouterLeave
+ResolvedRoute o-- ResolvedRoute
 NavigationInstruction --> NavigationType
 NavigationPipeline --> NavigationContext
 
+IRouteResolver --> ResolvedRoute
 INavigator --> NavigationType
 INavigator --> NavigationOptions
-IHistoryManager --> NavigationInstruction
+IHistoryManager o-- NavigationInstruction
+IRoute o-- ResolvedRoute
 
 note right of NavigationPipeline
     导航管道
