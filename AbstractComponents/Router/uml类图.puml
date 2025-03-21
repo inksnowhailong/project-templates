@@ -45,10 +45,10 @@ package "Domain Models" {
         +path: string
         +name?: string
         +component: any
-        +guards: RouteGuard[] :路由守卫,用于拦截导航
-        +enterHook: RouterBefore[] :完成一些预处理任务
-        +leaveHook: RouterLeave[] :完成一些后处理任务
-        +children: ResolvedRoute[] :子路由
+        +guards?: RouteGuard[] :路由守卫,用于拦截导航
+        +enterHook?: RouterBefore[] :完成一些预处理任务
+        +leaveHook?: RouterLeave[] :完成一些后处理任务
+        +children?: ResolvedRoute[] :子路由
         +metadata: Map<string, any>
     }
 }
@@ -58,7 +58,6 @@ package "Core Abstractions" {
 
     ' 导航器，使用有两种方式进行编程式路由导航
     interface "INavigator" {
-        +to(type: NavigationType, target: string, options: NavigationOptions): Promise<void> :通过字符串类型进行路由导航的方式
         +push(target: string, options: NavigationOptions): Promise<void>
         +replace(target: string, options: NavigationOptions): Promise<void>
         +back(): Promise<void>

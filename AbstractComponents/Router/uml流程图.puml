@@ -1,0 +1,87 @@
+@startuml
+actor 页面
+
+participant "AbstractRouterAdapter" as Adapter
+participant "Navigator" as Navigator
+participant "Resolver" as Resolver
+participant "NavigationContext" as Context
+participant "PrevRoute" as PrevRoute
+participant "NavigationPipeline" as Pipeline
+participant "Guard" as Guard
+participant "HistoryMiddleWare" as HistoryMW
+participant "History" as History
+participant "TargetRoute" as TargetRoute
+
+' 页面触发导航
+页面 -> Adapter: push(目标, 选项)
+activate Adapter
+
+' Adapter 调用 Navigator
+Adapter -> Navigator: push(目标, 选项)
+activate Navigator
+
+' 解析路由
+Navigator -> Resolver: resolve(目标)
+activate Resolver
+Resolver --> Navigator: ResolvedRoute
+deactivate Resolver
+
+' 创建 NavigationContext（不更新历史记录）
+Navigator -> Context: new NavigationContext(指令, 上一个指令, 当前路由)
+activate Context
+Context --> Navigator: Context 实例
+deactivate Context
+
+' 执行上一个路由的 leaveHook
+Navigator -> PrevRoute: leaveHook(context)
+activate PrevRoute
+PrevRoute --> Navigator: 完成上个路由的离开逻辑
+deactivate PrevRoute
+
+' 进入导航管道
+Navigator -> Pipeline: pipe(context)
+activate Pipeline
+
+' 执行守卫中间件（可能阻止、允许或修改指令）
+Pipeline -> Guard: process(context, next)
+activate Guard
+Guard --> Pipeline: 允许进入，阻止进入，或更改context.instruction
+deactivate Guard
+
+' 执行历史记录中间件（更新历史记录）
+Pipeline -> HistoryMW: process(context, next)
+activate HistoryMW
+HistoryMW -> History: push(指令) 或 replace(指令)
+activate History
+History --> HistoryMW: 更新完成
+deactivate History
+HistoryMW --> Pipeline: next()
+deactivate HistoryMW
+
+' 管道完成
+Pipeline --> Navigator: 导航处理完成
+deactivate Pipeline
+
+' 执行目标路由的 enterHook
+Navigator -> TargetRoute: enterHook(context)
+activate TargetRoute
+TargetRoute --> Navigator: 完成页面进入前的逻辑
+deactivate TargetRoute
+
+' Navigator 返回结果给 Adapter
+Navigator --> Adapter: 执行导航
+deactivate Navigator
+
+' Adapter 完成导航并通知页面
+Adapter --> 页面: 导航成功
+deactivate Adapter
+
+note right of Pipeline
+    NavigationPipeline 处理中间件逻辑，\n包括守卫和历史记录更新
+end note
+
+note right of Context
+    NavigationContext 包含导航指令和路由信息，\n守卫可能修改指令
+end note
+
+@enduml

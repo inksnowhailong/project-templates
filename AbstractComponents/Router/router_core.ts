@@ -11,11 +11,7 @@ import {
  * @return {*}
  */
 export interface INavigator {
-  to(
-    type: NavigationType,
-    target: string,
-    options: NavigationOptions
-  ): Promise<void>;
+
   push(target: string, options: NavigationOptions): Promise<void>;
   replace(target: string, options: NavigationOptions): Promise<void>;
   back(): Promise<void>;
