@@ -1,0 +1,122 @@
+@startuml http数据请求抽象设计
+
+
+left to right direction
+
+' 数据传输对象（DTO）
+package "DTO" {
+    enum "RequestMethod" {
+        GET
+        POST
+        PUT
+        DELETE
+        PATCH
+    }
+    interface "RequestParams" {
+        +url: string
+        +method: RequestMethod
+        +headers: Map<string, string>
+        +data?: any
+        +params?: Map<string, string>
+        +meta?: Map<string, any>
+    }
+    interface "ResponseData" {
+        +status: number
+        +message: string
+        +data: any
+        +meta?: Map<string, any>
+    }
+}
+
+' 核心逻辑（Core）
+package "Core" {
+    interface "IRequestMethod" {
+        +request(params: RequestParams): Promise<ResponseData>
+    }
+    interface "IRequestInterceptor" {
+        +beforeRequest(params: RequestParams, options?: any): Promise<RequestParams>
+    }
+    interface "IResponseInterceptor" {
+        +beforeResponse(response: ResponseData): Promise<ResponseData>
+    }
+    abstract class "DutyChain" {
+        -nextDutyChain: DutyChain
+        +setNext(handler: DutyChain): DutyChain <<implemented>>
+        +{abstract} handler(): Promise<void> : 判断是否有下一个责任链
+        -{abstract} process(params: RequestParams | ResponseData): Promise<void>
+    }
+}
+
+' 适配器（Framework Adapters）
+package "Framework Adapters" {
+    abstract class "AbstractRequestAdapter" {
+        +request: IRequestMethod
+        -requestInterceptor: IRequestInterceptor
+        -responseInterceptor: IResponseInterceptor
+        +requestDutyChain: DutyChain
+        +responseDutyChain: DutyChain
+        +errorDutyChain: DutyChain
+        +init(): void
+    }
+}
+
+' 插件（Plugins）
+package "Plugins" {
+    class "RepeatRequest" {
+        +handler(): Promise<void>
+        -process(params: RequestParams): Promise<void>
+    }
+    class "RequestAuth" {
+        +handler(): Promise<void>
+        -process(params: RequestParams): Promise<void>
+    }
+    class "Message" {
+        +handler(): Promise<void>
+        -process(response: ResponseData): Promise<void>
+    }
+}
+
+
+package "Application" {
+   abstract class AsyncBase {
+     +Requester: AbstractRequestAdapter;
+     +constructor(Requester: AbstractRequestAdapter)
+    }
+    ' 示例：登录页面
+    class "Login" extends AsyncBase {
+    }
+}
+
+
+' 关系链接
+' DTO 与 Core 的依赖
+"IRequestMethod" --> "RequestParams"
+"IRequestMethod" --> "ResponseData"
+"IRequestInterceptor" --> "RequestParams"
+"IResponseInterceptor" --> "ResponseData"
+"DutyChain" --> "RequestParams"
+"DutyChain" --> "ResponseData"
+
+' Core 与 Framework Adapters 的关系
+"AbstractRequestAdapter" --> "IRequestMethod"
+"AbstractRequestAdapter" --> "IRequestInterceptor"
+"AbstractRequestAdapter" --> "IResponseInterceptor"
+"AbstractRequestAdapter" --> "DutyChain" : uses requestDutyChain
+"AbstractRequestAdapter" --> "DutyChain" : uses responseDutyChain
+"AbstractRequestAdapter" --> "DutyChain" : uses errorDutyChain
+
+' Core 与 Plugins 的继承关系
+"DutyChain" <|-- "RepeatRequest"
+"DutyChain" <|-- "RequestAuth"
+"DutyChain" <|-- "Message"
+
+' DutyChain 的责任链关系
+"DutyChain" o--> "DutyChain" : next
+
+' Plugins 与 DTO 的依赖
+"RepeatRequest" --> "RequestParams" : processes
+"RequestAuth" --> "RequestParams" : processes
+"Message" --> "ResponseData" : processes
+' Application 与 Framework Adapters 的依赖
+"AsyncBase" --> "AbstractRequestAdapter" : uses
+@enduml

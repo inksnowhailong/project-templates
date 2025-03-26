@@ -1,4 +1,5 @@
 @startuml 高级路由抽象设计
+left to right direction
 
 ' 领域模型
 package "Domain Models" {
