@@ -118,5 +118,5 @@ package "Application" {
 "RequestAuth" --> "RequestParams" : processes
 "Message" --> "ResponseData" : processes
 ' Application 与 Framework Adapters 的依赖
-"AsyncBase" --> "AbstractRequestAdapter" : uses
+"AsyncBase" --> "AbstractRequestAdapter"
 @enduml
