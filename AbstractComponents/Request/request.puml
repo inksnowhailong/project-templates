@@ -15,7 +15,7 @@ package "DTO" {
     interface "RequestParams" {
         +url: string
         +method: RequestMethod
-        +headers: Map<string, string>
+        +headers?: Map<string, string>
         +data?: any
         +params?: Map<string, string>
         +meta?: Map<string, any>
@@ -31,7 +31,7 @@ package "DTO" {
 ' 核心逻辑（Core）
 package "Core" {
     interface "IRequestMethod" {
-        +request(params: RequestParams): Promise<ResponseData>
+        (params: RequestParams): Promise<ResponseData>
     }
     interface "IRequestInterceptor" {
         +beforeRequest(params: RequestParams, options?: any): Promise<RequestParams>

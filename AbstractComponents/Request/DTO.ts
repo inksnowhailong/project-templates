@@ -1,7 +1,7 @@
 /**
  * HTTP 请求方法枚举
  */
-export enum RequestMethod {
+export const enum RequestMethod {
     GET = "GET",
     POST = "POST",
     PUT = "PUT",
@@ -18,7 +18,7 @@ export interface RequestParams {
     /** 请求方法 */
     method: RequestMethod;
     /** 请求头 */
-    headers: Map<string, string>;
+    headers?: Map<string, string>;
     /** 请求体数据（可选） */
     data?: any;
     /** 查询参数（可选） */
