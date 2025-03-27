@@ -42,7 +42,8 @@ package "Core" {
     abstract class "DutyChain" {
         -nextDutyChain: DutyChain
         +setNext(handler: DutyChain): DutyChain <<implemented>>
-        +{abstract} handler(): Promise<void> : 判断是否有下一个责任链
+        -{abstract} canUse(params: RequestParams | ResponseData): boolean  判断是否有下一个责任链
+        +{abstract} handler(): Promise<void> : 负责决定是否继续执行下一个责任链
         -{abstract} process(params: RequestParams | ResponseData): Promise<void>
     }
 }

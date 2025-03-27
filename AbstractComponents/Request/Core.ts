@@ -55,14 +55,11 @@ export abstract class DutyChain {
         return handler;
     }
 
+    abstract  canUse(params: RequestParams | ResponseData): boolean
     /**
      * 执行责任链处理
      */
-    public async handler(): Promise<void> {
-        if (this.nextDutyChain) {
-            await this.nextDutyChain.handler();
-        }
-    }
+    abstract handler(): Promise<void>
 
     /**
      * 处理逻辑（抽象方法）
