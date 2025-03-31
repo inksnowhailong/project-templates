@@ -64,16 +64,13 @@ package "Framework Adapters" {
 ' 插件（Plugins）
 package "Plugins" {
     class "RepeatRequest" {
-        +handler(): Promise<void>
-        -process(params: RequestParams): Promise<void>
+
     }
     class "RequestAuth" {
-        +handler(): Promise<void>
-        -process(params: RequestParams): Promise<void>
+
     }
     class "Message" {
-        +handler(): Promise<void>
-        -process(response: ResponseData): Promise<void>
+
     }
 }
 
@@ -115,9 +112,22 @@ package "Application" {
 "DutyChain" o--> "DutyChain" : next
 
 ' Plugins 与 DTO 的依赖
-"RepeatRequest" --> "RequestParams" : processes
-"RequestAuth" --> "RequestParams" : processes
-"Message" --> "ResponseData" : processes
+"RepeatRequest" --> "RequestParams" : 依赖
+"RequestAuth" --> "RequestParams" : 依赖
+"Message" --> "ResponseData" : 依赖
+
+
 ' Application 与 Framework Adapters 的依赖
 "AsyncBase" --> "AbstractRequestAdapter"
+
+
+note left of Plugins
+    这些插件是示例，实际情况你可以自行决定都有什么插件
+end note
+
+
+note right of DutyChain
+    这里使用责任链来让每个插件都有机会处理这个请求，
+end note
+
 @enduml

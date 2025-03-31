@@ -10,7 +10,7 @@ export interface IRequestMethod {
      * @param params 请求参数
      * @returns 响应数据
      */
-   (params: RequestParams): Promise<ResponseData>;
+    <P,R>(params: RequestParams<P>): Promise<ResponseData<R>>;
 }
 
 /**
