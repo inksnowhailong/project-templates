@@ -16,14 +16,10 @@ export enum BridgeEnum {
  * @template O - 响应数据类型
  */
 export interface BridgeDTO<T = any, O = any> {
-    /** 桥接类型 */
-    bridgeType: BridgeEnum;
-    /** 请求数据 */
-    request?: T;
-    /** 响应数据 */
-    response?: O;
-    /** 错误信息 */
-    error?: string;
+      /** 桥接类型 */
+      bridgeType: BridgeEnum;
+      /** 请求数据 */
+      payload?: T;
 }
 
 /**
